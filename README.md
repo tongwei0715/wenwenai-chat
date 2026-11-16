@@ -1,8 +1,8 @@
-# chat-demo
+# WenWen AI Web (wenwenai-chat)
 
 English | [简体中文](README.zh-CN.md)
 
-A static chat demo powered by the DeepSeek API. No application backend is required: the browser connects directly to the configured API service.
+A rebranded web chat app for WenWen AI (wenwenai.cn), built on the DeepSeek API. No application backend is required: the browser connects directly to the configured API service. Features deep thinking, intelligent web search, code/formula/diagram rendering, multimodal attachments and voice interaction.
 
 You can [try the app online](https://deepseek-ai.github.io/chat-demo/) or download the archive from [Releases](https://github.com/deepseek-ai/deepseek-chat-demo/releases), extract it, and double-click `index.html` to use it locally without installation or a build. Enter your API key in Settings before your first chat.
 

@@ -1,7 +1,8 @@
 import type { zh } from './zh.js'
 
 export const en = {
-  welcomeMessageChat250808: 'How can I help you?',
+  welcomeMessageChat250808: 'What can I help you with?',
+  welcomeTagline: 'Deep thinking · Web search · Code & charts · Multimodal chat',
   contentCaveat: 'AI-generated, for reference only',
   expandSiderbarButton: 'Open sidebar',
   collapseSiderbarButton: 'Close sidebar',
@@ -14,7 +15,7 @@ export const en = {
     'Chats or attachments have not been saved locally. Retry before closing this page.',
   sessionDeleteFailed: 'Unable to delete this chat. Please try again.',
   settings: 'Settings',
-  appName: 'API usage demo',
+  appName: 'WenWen AI',
   deleteSessionModalContentTitle: 'Delete chat?',
   deleteSessionWithFilesDescription:
     'This chat and its uploaded files will be permanently deleted and cannot be recovered. Delete this chat?',
@@ -178,4 +179,16 @@ export const en = {
   latestReminderLanguage: 'English',
   settingsLocaleZhCN: 'Simplified Chinese',
   settingsLocaleEnUS: 'English',
+  settingsModel: 'Model',
+  settingsModelFlash: 'WenWen Flash (deepseek-flash)',
+  settingsModelV4Pro: 'WenWen Deep (deepseek-v4-pro)',
+  settingsApiOrigin: 'API Base',
+  settingsApiOriginDescription: 'Custom API base URL. Leave empty to use the default DeepSeek API.',
+  settingsApiOriginReset: 'Reset to default',
+  backToHome: 'Back to wenwenai.cn',
+  downloadApp: 'Download the WenWen AI app',
+  quickPromptCode: 'Write a Python script to process Excel',
+  quickPromptWrite: 'Write an engaging article',
+  quickPromptPlan: 'Make me a 30-day study plan',
+  quickPromptReview: 'Summarize the key points of this document',
 } satisfies Record<keyof typeof zh, string>

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import type { TtsVoice } from './api/speech.js'
+import type { ChatModel } from './api/types.js'
 import { normalizeLocation, type UserLocation } from './location.js'
 
 export type Locale = 'zh-CN' | 'en-US'
@@ -7,7 +8,7 @@ export type Locale = 'zh-CN' | 'en-US'
 /** 主题偏好；默认跟随系统 */
 export type ThemePreference = 'light' | 'dark' | 'system'
 
-/** 本机设置，存 localStorage：API Key、语言、主题、位置、朗读音色、深度思考与智能搜索开关、侧边栏收起状态 */
+/** 本机设置，存 localStorage：API Key、语言、主题、位置、朗读音色、深度思考与智能搜索开关、侧边栏收起状态、模型与自定义 API 地址 */
 type Settings = {
   apiKey: string | null
   locale: Locale
@@ -17,17 +18,21 @@ type Settings = {
   thinking: boolean
   search: boolean
   siderCollapsed: boolean
+  model: ChatModel
+  apiOrigin: string
 }
 
 const KEYS = {
-  apiKey: 'chat-demo:api-key',
-  locale: 'chat-demo:locale',
-  location: 'chat-demo:location',
-  themePreference: 'chat-demo:theme-preference',
-  ttsVoice: 'chat-demo:tts-voice',
-  thinking: 'chat-demo:thinking',
-  search: 'chat-demo:search',
-  siderCollapsed: 'chat-demo:sider-collapsed',
+  apiKey: 'wenwen-chat:api-key',
+  locale: 'wenwen-chat:locale',
+  location: 'wenwen-chat:location',
+  themePreference: 'wenwen-chat:theme-preference',
+  ttsVoice: 'wenwen-chat:tts-voice',
+  thinking: 'wenwen-chat:thinking',
+  search: 'wenwen-chat:search',
+  siderCollapsed: 'wenwen-chat:sider-collapsed',
+  model: 'wenwen-chat:model',
+  apiOrigin: 'wenwen-chat:api-origin',
 } as const
 
 const read = (key: string) => {
@@ -87,6 +92,9 @@ const initialThemePreference = (): ThemePreference => {
 /** 未保存过时使用服务端默认音色 stella（海星） */
 const initialTtsVoice = (): TtsVoice => (read(KEYS.ttsVoice) === 'tide' ? 'tide' : 'stella')
 
+/** 未保存过时使用默认模型 deepseek-flash */
+const initialModel = (): ChatModel => (read(KEYS.model) === 'deepseek-v4-pro' ? 'deepseek-v4-pro' : 'deepseek-flash')
+
 export const useSettings = create<Settings>(() => ({
   apiKey: read(KEYS.apiKey),
   locale: initialLocale(),
@@ -96,6 +104,8 @@ export const useSettings = create<Settings>(() => ({
   thinking: read(KEYS.thinking) === 'true',
   search: read(KEYS.search) === 'true',
   siderCollapsed: read(KEYS.siderCollapsed) === 'true',
+  model: initialModel(),
+  apiOrigin: read(KEYS.apiOrigin) ?? '',
 }))
 
 export const setLocale = (locale: Locale) => {
@@ -137,4 +147,16 @@ export const setSearch = (search: boolean) => {
 export const setSiderCollapsed = (siderCollapsed: boolean) => {
   write(KEYS.siderCollapsed, String(siderCollapsed))
   useSettings.setState({ siderCollapsed })
+}
+
+export const setModel = (model: ChatModel) => {
+  write(KEYS.model, model)
+  useSettings.setState({ model })
+}
+
+/** 自定义 API 地址；空字符串表示使用构建期默认地址。 */
+export const setApiOrigin = (apiOrigin: string) => {
+  const normalized = apiOrigin.trim().replace(/\/+$/, '')
+  write(KEYS.apiOrigin, normalized || null)
+  useSettings.setState({ apiOrigin: normalized })
 }

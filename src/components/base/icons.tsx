@@ -523,3 +523,30 @@ export const IconToastError16 = () => (
     />
   </svg>
 )
+
+/** 问问Ai (wenwenai.cn) 品牌双气泡标志（不含任何像素卡通元素，纯净专业） */
+export const WenwenBrandLogo = ({ size = 28 }: { size?: number }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 120 120"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <rect width="120" height="120" rx="28" fill="#2F5BFF" />
+    <path d="M26 62h14L24 78z" fill="#FFC93C" />
+    <rect x="18" y="20" width="58" height="46" rx="16" fill="#FFC93C" />
+    <path d="M72 90h20l2 16z" fill="#fff" />
+    <rect x="40" y="44" width="62" height="48" rx="17" fill="#fff" />
+    <path
+      d="M62 62c0-8 18-8 18 1 0 7-9 7-9 14"
+      fill="none"
+      stroke="#2F5BFF"
+      strokeWidth="5"
+      strokeLinecap="round"
+    />
+    <circle cx="71" cy="85" r="3.2" fill="#2F5BFF" />
+  </svg>
+)
+

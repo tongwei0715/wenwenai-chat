@@ -1,8 +1,8 @@
-# chat-demo
+# 问问Ai 网页版（wenwenai-chat）
 
 [English](README.md) | 简体中文
 
-基于 DeepSeek API 的静态聊天示例。无需应用后端，浏览器直接请求配置的 API 服务。
+基于 DeepSeek API 二次开发的「问问Ai (wenwenai.cn) 网页版」聊天应用。无需应用后端，浏览器直接请求配置的 API 服务，支持深度思考、智能联网搜索、代码/公式/图表渲染、多模态附件与语音交互。
 
 点击 [在线体验](https://deepseek-ai.github.io/chat-demo/) 即可使用，也可以前往 [Releases](https://github.com/deepseek-ai/deepseek-chat-demo/releases) 下载压缩包，解压后双击 `index.html` 在本地使用，无需安装或构建。首次使用时，请在设置中填写 API Key。
 

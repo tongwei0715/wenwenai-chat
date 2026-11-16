@@ -24,9 +24,12 @@ import {
   setLocation,
   setThemePreference,
   setTtsVoice,
+  setModel,
+  setApiOrigin,
   useSettings,
   type ThemePreference,
 } from '../../services/settings.js'
+import type { ChatModel } from '../../services/api/types.js'
 import { useTranslate, type TranslationKey, type TranslationMessage } from '../../i18n/index.js'
 import { Button } from '../base/Button.js'
 import { Modal } from '../base/Modal.js'
@@ -97,9 +100,11 @@ const SettingsContent = () => {
           {section === 'general' ? (
             <>
               <ThemeSetting />
+              <ModelSetting />
               <LocaleSetting />
               <TtsVoiceSetting />
               <LocationSetting />
+              <ApiOriginSetting />
             </>
           ) : (
             <>
@@ -286,6 +291,64 @@ const LocaleSetting = () => {
           ]}
           onChange={setLocale}
         />
+      }
+    />
+  )
+}
+
+/** 模型选择：问问快答（deepseek-flash）/ 问问深度（deepseek-v4-pro） */
+const ModelSetting = () => {
+  const t = useTranslate()
+  const model = useSettings((state) => state.model)
+  return (
+    <SettingCell
+      label={t('settingsModel')}
+      status={null}
+      action={
+        <Select
+          ariaLabel={t('settingsModel')}
+          value={model}
+          options={[
+            { value: 'deepseek-flash' as ChatModel, label: t('settingsModelFlash') },
+            { value: 'deepseek-v4-pro' as ChatModel, label: t('settingsModelV4Pro') },
+          ]}
+          onChange={setModel}
+        />
+      }
+    />
+  )
+}
+
+/** 自定义 API 地址：留空使用默认 DeepSeek 接口 */
+const ApiOriginSetting = () => {
+  const t = useTranslate()
+  const apiOrigin = useSettings((state) => state.apiOrigin)
+  return (
+    <SettingCell
+      label={t('settingsApiOrigin')}
+      description={t('settingsApiOriginDescription')}
+      status={null}
+      action={
+        <div className={styles.apiOrigin}>
+          <input
+            className={styles.apiOriginInput}
+            type="text"
+            placeholder="https://api.deepseek.com"
+            autoComplete="off"
+            spellCheck={false}
+            value={apiOrigin}
+            onChange={(event) => setApiOrigin(event.target.value)}
+          />
+          {apiOrigin ? (
+            <button
+              type="button"
+              className={styles.apiOriginReset}
+              onClick={() => setApiOrigin('')}
+            >
+              {t('settingsApiOriginReset')}
+            </button>
+          ) : null}
+        </div>
       }
     />
   )

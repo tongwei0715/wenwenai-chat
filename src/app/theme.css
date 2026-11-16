@@ -34,9 +34,9 @@ body {
   --dsw-static-blue-100: rgb(228, 237, 253);
   --dsw-static-blue-200: rgb(211, 226, 255);
   --dsw-static-blue-300: rgb(183, 200, 254);
-  --dsw-static-blue-400: rgb(103, 158, 254);
-  --dsw-static-blue-450: rgb(86, 134, 254);
-  --dsw-static-blue-500: rgb(57, 100, 254);
+  --dsw-static-blue-400: rgb(94, 135, 255);
+  --dsw-static-blue-450: rgb(68, 112, 255);
+  --dsw-static-blue-500: rgb(47, 91, 255);
   --dsw-static-blue-50: rgb(237, 243, 254);
   --dsw-static-blue-600: rgb(72, 104, 178);
   --dsw-static-blue-800: rgb(52, 65, 91);
@@ -79,9 +79,9 @@ body[data-ds-dark-theme] {
   --dsw-static-blue-100: rgb(228, 237, 253);
   --dsw-static-blue-200: rgb(211, 226, 255);
   --dsw-static-blue-300: rgb(183, 200, 254);
-  --dsw-static-blue-400: rgb(103, 158, 254);
-  --dsw-static-blue-450: rgb(86, 134, 254);
-  --dsw-static-blue-500: rgb(57, 100, 254);
+  --dsw-static-blue-400: rgb(94, 135, 255);
+  --dsw-static-blue-450: rgb(68, 112, 255);
+  --dsw-static-blue-500: rgb(47, 91, 255);
   --dsw-static-blue-50: rgb(237, 243, 254);
   --dsw-static-blue-600: rgb(72, 104, 178);
   --dsw-static-blue-800: rgb(52, 65, 91);

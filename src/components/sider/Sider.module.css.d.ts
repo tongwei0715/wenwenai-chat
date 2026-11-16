@@ -1,6 +1,8 @@
 declare const styles: {
   readonly "sider": string;
   readonly "top": string;
+  readonly "brand": string;
+  readonly "brandLogo": string;
   readonly "appName": string;
   readonly "newChat": string;
   readonly "newChatIcon": string;
@@ -9,6 +11,8 @@ declare const styles: {
   readonly "section": string;
   readonly "sectionHeader": string;
   readonly "bottom": string;
+  readonly "links": string;
+  readonly "link": string;
   readonly "settings": string;
   readonly "settingsIcon": string;
   readonly "settingsLabel": string;
