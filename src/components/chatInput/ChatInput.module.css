@@ -12,6 +12,13 @@
   border: 1px solid var(--dsw-alias-border-l2-darkmode-thin);
   background: var(--dsw-specific-input-major);
   overflow: hidden;
+  transition: border-color var(--ds-transition-duration) var(--ds-ease-in-out);
+}
+
+/* 聚焦态：品牌色描边 + 低透明度外圈（text-input-focused 规范） */
+.wrapper:focus-within {
+  border-color: var(--dsw-alias-brand-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsw-alias-brand-primary) 15%, transparent);
 }
 
 .session {
@@ -21,10 +28,7 @@
 }
 
 .home {
-  box-shadow:
-    0 4px 12px 0 rgba(0, 0, 0, 0.02),
-    0 2px 2px 0 rgba(72, 104, 178, 0.01),
-    0 30px 60px 0 rgba(72, 104, 178, 0.03);
+  box-shadow: 0 2px 8px 0 rgba(31, 29, 26, 0.05);
 
   [data-ds-dark-theme] & {
     box-shadow: none;

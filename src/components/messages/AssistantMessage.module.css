@@ -22,7 +22,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--dsw-alias-label-dimmed);
+  background-color: var(--dsw-alias-brand-primary);
   animation: fading 0.9s linear infinite;
 
   &:nth-child(2) {

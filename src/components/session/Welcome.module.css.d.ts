@@ -3,9 +3,14 @@ declare const styles: {
   readonly "welcome": string;
   readonly "logo": string;
   readonly "greeting": string;
-  readonly "tagline": string;
+  readonly "badges": string;
+  readonly "badge": string;
   readonly "prompts": string;
-  readonly "prompt": string;
+  readonly "promptCard": string;
+  readonly "promptIcon": string;
+  readonly "promptTexts": string;
+  readonly "promptTitle": string;
+  readonly "promptDesc": string;
   readonly "caveat": string;
 };
 export = styles;

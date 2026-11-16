@@ -3,6 +3,11 @@ import type { zh } from './zh.js'
 export const en = {
   welcomeMessageChat250808: 'What can I help you with?',
   welcomeTagline: 'Deep thinking · Web search · Code & charts · Multimodal chat',
+  badgeThinking: 'DeepThink',
+  badgeSearch: 'Web Search',
+  badgeCharts: 'Math & Charts',
+  badgeVoice: 'Voice Input',
+  badgeMultimodal: 'Multimodal',
   contentCaveat: 'AI-generated, for reference only',
   expandSiderbarButton: 'Open sidebar',
   collapseSiderbarButton: 'Close sidebar',
@@ -84,7 +89,7 @@ export const en = {
   groupTitleToolOpen: 'Browsing the web',
   messageThinking: 'Thinking',
   backupInvalidJson: 'The file is not valid JSON.',
-  backupUnrecognized: 'File not recognized. Please choose a DeepSeek chat history ZIP.',
+  backupUnrecognized: 'File not recognized. Please choose a chat history ZIP exported from WenWen AI (or DeepSeek).',
   backupNewerVersion: 'This file uses a newer version. Please update the app before importing.',
   backupInvalidVersion: 'The file version is invalid and cannot be imported.',
   backupIncomplete: 'The file is incomplete and cannot be imported.',
@@ -117,7 +122,7 @@ export const en = {
   historyImportConfirmDescription:
     'The uploaded chat history will replace all your current chats. Import anyway?',
   historyImportDescription:
-    'Importing chat history replaces all local chats and attachments. Supports ZIP files exported from DeepSeek.',
+    'Importing chat history replaces all local chats and attachments. Supports ZIP files exported from WenWen AI and DeepSeek.',
   historyImportedOne: 'Imported 1 chat',
   historyImported: 'Imported {count} chats',
   historyImportFailed:
@@ -188,7 +193,11 @@ export const en = {
   backToHome: 'Back to wenwenai.cn',
   downloadApp: 'Download the WenWen AI app',
   quickPromptCode: 'Write a Python script to process Excel',
+  quickPromptCodeDesc: 'Data cleanup, reports, batch jobs',
   quickPromptWrite: 'Write an engaging article',
+  quickPromptWriteDesc: 'Headlines, structure, polish',
   quickPromptPlan: 'Make me a 30-day study plan',
+  quickPromptPlanDesc: 'Goals, schedule, progress tracking',
   quickPromptReview: 'Summarize the key points of this document',
+  quickPromptReviewDesc: 'Condense, distill, conclude',
 } satisfies Record<keyof typeof zh, string>

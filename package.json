@@ -1,7 +1,7 @@
 {
-  "name": "chat-demo",
-  "version": "0.1.1",
-  "description": "基于 DeepSeek API 的静态聊天示例。",
+  "name": "wenwenai-chat",
+  "version": "1.0.0",
+  "description": "问问Ai (wenwenai.cn) 网页版 — 纯前端智能对话应用。",
   "license": "MIT",
   "private": true,
   "type": "module",
