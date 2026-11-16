@@ -2,6 +2,8 @@ import clsx from 'clsx'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslate } from '../../i18n/index.js'
 import {
+  IconDownloadOutline16,
+  IconGlobeLanguageOutline14,
   IconPanelLeftOutline16,
   IconSettingsOutline16,
   NewChatIcon,
@@ -59,7 +61,7 @@ export const Sider = ({ mobile = false }: { mobile?: boolean }) => {
       <div className={styles.top}>
         <div className={styles.brand}>
           <span className={styles.brandLogo}>
-            <WenwenBrandLogo size={24} />
+            <WenwenBrandLogo size={26} />
           </span>
           <span className={styles.appName}>{t('appName')}</span>
         </div>
@@ -86,40 +88,51 @@ export const Sider = ({ mobile = false }: { mobile?: boolean }) => {
       </button>
       <div className={styles.listWrap}>
         <div className={styles.list}>
-          {groups.map((group) => (
-            <div key={group.key} className={styles.section}>
-              <div className={styles.sectionHeader}>{group.label}</div>
-              {group.sessions.map((session) => (
-                <SessionItem
-                  key={session.id}
-                  session={session}
-                  active={session.id === activeId}
-                  onDelete={() => setDeleting(session)}
-                />
-              ))}
+          {groups.length === 0 ? (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyTitle}>{t('siderEmptyTitle')}</div>
+              <div className={styles.emptyDesc}>{t('siderEmptyDesc')}</div>
             </div>
-          ))}
+          ) : (
+            groups.map((group) => (
+              <div key={group.key} className={styles.section}>
+                <div className={styles.sectionHeader}>{group.label}</div>
+                {group.sessions.map((session) => (
+                  <SessionItem
+                    key={session.id}
+                    session={session}
+                    active={session.id === activeId}
+                    onDelete={() => setDeleting(session)}
+                  />
+                ))}
+              </div>
+            ))
+          )}
         </div>
       </div>
       <div className={styles.bottom}>
-        <div className={styles.links}>
-          <a
-            className={styles.link}
-            href="https://wenwenai.cn"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t('backToHome')}
-          </a>
-          <a
-            className={styles.link}
-            href="https://wenwenai.cn/#download"
-            target="_blank"
-            rel="noreferrer"
-          >
-            {t('downloadApp')}
-          </a>
-        </div>
+        <a
+          className={styles.settings}
+          href="https://wenwenai.cn"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span className={styles.settingsIcon}>
+            <IconGlobeLanguageOutline14 />
+          </span>
+          <span className={styles.settingsLabel}>{t('backToHome')}</span>
+        </a>
+        <a
+          className={styles.settings}
+          href="https://wenwenai.cn/#download"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span className={styles.settingsIcon}>
+            <IconDownloadOutline16 />
+          </span>
+          <span className={styles.settingsLabel}>{t('downloadApp')}</span>
+        </a>
         <button type="button" className={styles.settings} onClick={() => openSettings('general')}>
           <span className={styles.settingsIcon}>
             <IconSettingsOutline16 />

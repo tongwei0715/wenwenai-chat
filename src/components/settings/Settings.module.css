@@ -152,39 +152,47 @@
 }
 
 .themeOptions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
   margin: 8px 0 10px;
 }
 
 .themeOption {
   display: inline-flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 6px;
   box-sizing: border-box;
-  min-width: 128px;
-  height: 82px;
-  padding: 21px 32px;
+  min-width: 0;
+  height: 74px;
+  padding: 12px 8px;
   border: 1px solid var(--dsw-alias-border-l2);
   border-radius: 12px;
   background-color: transparent;
   color: var(--dsw-alias-label-primary);
   font: inherit;
-  font-size: 14px;
-  line-height: 22px;
+  font-size: 13px;
+  line-height: 20px;
   text-align: center;
   white-space: nowrap;
   cursor: pointer;
   user-select: none;
   outline: none;
-  transition: background-color var(--ds-transition-duration) var(--ds-ease-in-out);
+  transition:
+    background-color var(--ds-transition-duration) var(--ds-ease-in-out),
+    border-color var(--ds-transition-duration) var(--ds-ease-in-out);
 
-  &:hover,
+  &:hover {
+    background-color: var(--dsw-alias-interactive-bg-hover);
+  }
+
   &.themeOptionSelected {
-    background-color: var(--dsw-specific-selector);
+    background-color: var(--dsw-alias-button-ghost-active-fill);
+    border-color: var(--dsw-alias-button-ghost-active-border);
+    color: var(--dsw-alias-brand-text);
+    font-weight: 500;
   }
 
   &:focus-visible {

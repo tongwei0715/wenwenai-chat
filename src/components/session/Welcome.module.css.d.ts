@@ -1,10 +1,16 @@
 declare const styles: {
   readonly "container": string;
+  readonly "desktopBar": string;
+  readonly "modelSwitch": string;
+  readonly "modelOption": string;
+  readonly "modelOptionActive": string;
   readonly "welcome": string;
+  readonly "hero": string;
   readonly "logo": string;
   readonly "greeting": string;
   readonly "badges": string;
   readonly "badge": string;
+  readonly "inputWrap": string;
   readonly "prompts": string;
   readonly "promptCard": string;
   readonly "promptIcon": string;

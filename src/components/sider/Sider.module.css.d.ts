@@ -8,11 +8,12 @@ declare const styles: {
   readonly "newChatIcon": string;
   readonly "listWrap": string;
   readonly "list": string;
+  readonly "emptyState": string;
+  readonly "emptyTitle": string;
+  readonly "emptyDesc": string;
   readonly "section": string;
   readonly "sectionHeader": string;
   readonly "bottom": string;
-  readonly "links": string;
-  readonly "link": string;
   readonly "settings": string;
   readonly "settingsIcon": string;
   readonly "settingsLabel": string;
@@ -23,4 +24,3 @@ declare const styles: {
   readonly "mobile": string;
 };
 export = styles;
-

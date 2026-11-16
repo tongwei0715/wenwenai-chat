@@ -109,6 +109,7 @@ const SettingsContent = () => {
           ) : (
             <>
               <ApiKeyField editor={apiKeyEditor} />
+              <ApiOriginSetting />
               <ImportHistory historyImport={historyImport} disabled={historyBusy} />
               <ExportHistory disabled={historyBusy} />
               <SettingCell
@@ -319,26 +320,18 @@ const ModelSetting = () => {
   )
 }
 
-/** 自定义 API 地址：留空使用默认 DeepSeek 接口 */
+/** 自定义 API 地址：留空使用默认 DeepSeek 接口，整行展示避免移动端截断 */
 const ApiOriginSetting = () => {
   const t = useTranslate()
   const apiOrigin = useSettings((state) => state.apiOrigin)
   return (
-    <SettingCell
-      label={t('settingsApiOrigin')}
-      description={t('settingsApiOriginDescription')}
-      status={null}
-      action={
-        <div className={styles.apiOrigin}>
-          <input
-            className={styles.apiOriginInput}
-            type="text"
-            placeholder="https://api.deepseek.com"
-            autoComplete="off"
-            spellCheck={false}
-            value={apiOrigin}
-            onChange={(event) => setApiOrigin(event.target.value)}
-          />
+    <div className={styles.cell}>
+      <div className={styles.apiKey}>
+        <div className={styles.row}>
+          <div className={styles.text}>
+            <div className={styles.label}>{t('settingsApiOrigin')}</div>
+            <div className={styles.description}>{t('settingsApiOriginDescription')}</div>
+          </div>
           {apiOrigin ? (
             <button
               type="button"
@@ -349,8 +342,18 @@ const ApiOriginSetting = () => {
             </button>
           ) : null}
         </div>
-      }
-    />
+        <div className={styles.apiKeyInput}>
+          <input
+            type="url"
+            placeholder="https://api.deepseek.com"
+            autoComplete="off"
+            spellCheck={false}
+            value={apiOrigin}
+            onChange={(event) => setApiOrigin(event.target.value)}
+          />
+        </div>
+      </div>
+    </div>
   )
 }
 
