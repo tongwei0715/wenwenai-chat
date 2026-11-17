@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { TtsVoice } from './api/speech.js'
 import type { ChatModel } from './api/types.js'
+import { DEFAULT_MODEL, MODELS } from './api/models.js'
 import { normalizeLocation, type UserLocation } from './location.js'
 
 export type Locale = 'zh-CN' | 'en-US'
@@ -92,8 +93,11 @@ const initialThemePreference = (): ThemePreference => {
 /** 未保存过时使用服务端默认音色 stella（海星） */
 const initialTtsVoice = (): TtsVoice => (read(KEYS.ttsVoice) === 'tide' ? 'tide' : 'stella')
 
-/** 未保存过时使用默认模型 deepseek-flash */
-const initialModel = (): ChatModel => (read(KEYS.model) === 'deepseek-v4-pro' ? 'deepseek-v4-pro' : 'deepseek-flash')
+/** 未保存过时使用默认模型 deepseek-flash；已保存但不在模型清单里时回落到默认 */
+const initialModel = (): ChatModel => {
+  const saved = read(KEYS.model)
+  return saved && MODELS.some((model) => model.id === saved) ? saved : DEFAULT_MODEL
+}
 
 export const useSettings = create<Settings>(() => ({
   apiKey: read(KEYS.apiKey),

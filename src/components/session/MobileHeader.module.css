@@ -10,41 +10,6 @@
   background-color: var(--dsw-alias-bg-base);
 }
 
-.center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  min-width: 0;
-}
-
-.brandName {
-  font-size: 16px;
-  line-height: 22px;
-  font-weight: 600;
-  letter-spacing: -0.2px;
-  color: var(--dsw-alias-label-primary);
-  white-space: nowrap;
-}
-
-.modelPill {
-  display: inline-flex;
-  align-items: center;
-  height: 24px;
-  padding: 0 9px;
-  border: 1px solid var(--dsw-alias-border-l2);
-  border-radius: 9999px;
-  background-color: var(--dsw-alias-bg-layer-2);
-  color: var(--dsw-alias-brand-text);
-  font: inherit;
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 500;
-  white-space: nowrap;
-  cursor: pointer;
-  user-select: none;
-}
-
 .title {
   flex: 1;
   min-width: 0;
@@ -53,6 +18,8 @@
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: center;
-  font: var(--dsw-font-s-strong-14);
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 500;
   color: var(--dsw-alias-label-primary);
 }

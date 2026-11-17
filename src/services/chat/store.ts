@@ -1,7 +1,8 @@
 import { create } from 'zustand'
 import { createId } from '../../utils/id.js'
-import { ApiError, streamMessage } from '../api/client.js'
+import { ApiError, streamMessage, streamOpenAICompletions } from '../api/client.js'
 import type { ChatModel, CreateMessageRequest } from '../api/types.js'
+import { getModel } from '../api/models.js'
 import { extractFileIds, getFileErrorCode, isRetryableApiError } from '../api/errors.js'
 import { cancelUpload, describeUploadError, uploadAttachment, useUploads } from '../attachments.js'
 import { useSettings } from '../settings.js'
@@ -20,6 +21,7 @@ import {
   canContinueReply,
   getContextRounds,
   settleReply,
+  toOpenAIMessages,
   toRequestMessages,
 } from './reply.js'
 import {
@@ -956,11 +958,77 @@ const waitForRetry = (attempt: number, signal: AbortSignal) =>
   })
 
 /**
+ * OpenAI 兼容协议（第三方模型 / deepseek-chat / deepseek-reasoner）的流式请求：
+ * 仅文本对话，不做附件补传，思考内容经 reasoning_content 流式还原，完成、失败或停止后落盘。
+ */
+const streamOpenAIReply = async (sessionId: string, initial: AssistantMessage, request: Request) => {
+  const controller = new AbortController()
+  set((state) => ({ streaming: { ...state.streaming, [sessionId]: controller } }))
+  let reply = initial
+  let frame = 0
+  const flush = () => {
+    cancelAnimationFrame(frame)
+    frame = 0
+    updateReply(sessionId, reply)
+  }
+  streamFlushes.set(sessionId, flush)
+
+  try {
+    const messages = toOpenAIMessages(request.history, request.question, request.prefix)
+    const events = streamOpenAICompletions(
+      useSettings.getState().apiKey ?? '',
+      { model: initial.model ?? MODEL, messages },
+      controller.signal
+    )
+    const blockIndexes = new Map<number, number>()
+    for await (const event of events) {
+      reply = applyEvent(reply, event, Date.now(), blockIndexes)
+      if (document.visibilityState === 'hidden') {
+        flush()
+      } else {
+        frame ||= requestAnimationFrame(flush)
+      }
+    }
+    reply = settleReply(reply, 'done', Date.now())
+  } catch (error) {
+    if (controller.signal.aborted) {
+      reply = settleReply(reply, 'stopped', Date.now())
+    } else if (error instanceof ApiError) {
+      reply = settleReply(reply, 'error', Date.now(), {
+        kind: error.kind,
+        message: error.message,
+        status: error.status,
+        localMessage: error.localMessage,
+      })
+    } else {
+      reply = settleReply(reply, 'error', Date.now(), {
+        kind: 'protocol',
+        message: error instanceof Error ? error.message : String(error),
+      })
+    }
+  } finally {
+    streamFlushes.delete(sessionId)
+    cancelAnimationFrame(frame)
+    updateReply(sessionId, reply)
+    set((state) => ({
+      streaming: Object.fromEntries(
+        Object.entries(state.streaming).filter(([id]) => id !== sessionId)
+      ),
+    }))
+    persist(sessionId)
+  }
+}
+
+/**
  * 请求并消费流：先补齐附件的 serverId，再发请求；流式增量按动画帧刷新内存，完成、失败或停止后落盘。
  * 补传失败时回复记为 upload 错误，可重试。
  * 服务端判定 file_id 失效时重新补传后重发，退避重试且次数有上限，超过则按原始报错收尾。
  */
 const streamReply = async (sessionId: string, initial: AssistantMessage, request: Request) => {
+  // 第三方模型与 deepseek-chat / deepseek-reasoner 走 OpenAI 兼容协议（无附件/联网扩展）
+  if (getModel(initial.model).protocol === 'openai') {
+    return streamOpenAIReply(sessionId, initial, request)
+  }
   const controller = new AbortController()
   if (!getSession(sessionId)?.title) {
     titleRequests.add(controller)

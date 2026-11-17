@@ -24,12 +24,10 @@ import {
   setLocation,
   setThemePreference,
   setTtsVoice,
-  setModel,
   setApiOrigin,
   useSettings,
   type ThemePreference,
 } from '../../services/settings.js'
-import type { ChatModel } from '../../services/api/types.js'
 import { useTranslate, type TranslationKey, type TranslationMessage } from '../../i18n/index.js'
 import { Button } from '../base/Button.js'
 import { Modal } from '../base/Modal.js'
@@ -100,7 +98,6 @@ const SettingsContent = () => {
           {section === 'general' ? (
             <>
               <ThemeSetting />
-              <ModelSetting />
               <LocaleSetting />
               <TtsVoiceSetting />
               <LocationSetting />
@@ -291,29 +288,6 @@ const LocaleSetting = () => {
             { value: 'en-US', label: t('settingsLocaleEnUS'), lang: 'en' },
           ]}
           onChange={setLocale}
-        />
-      }
-    />
-  )
-}
-
-/** 模型选择：问问快答（deepseek-flash）/ 问问深度（deepseek-v4-pro） */
-const ModelSetting = () => {
-  const t = useTranslate()
-  const model = useSettings((state) => state.model)
-  return (
-    <SettingCell
-      label={t('settingsModel')}
-      status={null}
-      action={
-        <Select
-          ariaLabel={t('settingsModel')}
-          value={model}
-          options={[
-            { value: 'deepseek-flash' as ChatModel, label: t('settingsModelFlash') },
-            { value: 'deepseek-v4-pro' as ChatModel, label: t('settingsModelV4Pro') },
-          ]}
-          onChange={setModel}
         />
       }
     />

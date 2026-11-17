@@ -8,6 +8,9 @@ import type {
   FileObject,
   FilePurpose,
   MessageStreamEvent,
+  OpenAIChatChunk,
+  OpenAIChatMessage,
+  StopReason,
 } from './types.js'
 
 /** 构建期 API 地址，默认 https://api.deepseek.com；本地开发支持开发服务器代理 */
@@ -191,4 +194,110 @@ export async function* streamMessage(
   }
   // 服务端没有提供错误内容时保持为空，不推测断流原因。
   throw new ApiError('interrupted', '')
+}
+
+/**
+ * POST /v1/chat/completions（stream: true），OpenAI 兼容接口。
+ * 把 OpenAI 的流式增量映射成本应用的 MessageStreamEvent：
+ * - delta.content → 文本块增量；delta.reasoning_content → 思考块增量（deepseek-reasoner 等）
+ * - finish_reason: length → max_tokens，其余 → end_turn
+ */
+export async function* streamOpenAICompletions(
+  apiKey: string,
+  body: { model: string; messages: OpenAIChatMessage[] },
+  signal: AbortSignal
+): AsyncGenerator<MessageStreamEvent> {
+  const response = await request(`${getApiOrigin()}/v1/chat/completions`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+      Accept: 'text/event-stream',
+    },
+    body: JSON.stringify({ ...body, stream: true }),
+    signal,
+  })
+  const contentType = response.headers.get('Content-Type') ?? ''
+  if (!response.body || !contentType.includes('text/event-stream')) {
+    throw await readErrorResponse(response, 'protocol', '')
+  }
+
+  let started = false
+  let textOpen = false
+  let thinkingOpen = false
+  let textIndex = -1
+  let thinkingIndex = -1
+  let stopReason: StopReason = 'end_turn'
+
+  for await (const { data } of readServerSentEvents(response.body, signal)) {
+    if (data.trim() === '[DONE]') {
+      break
+    }
+    let payload: unknown
+    try {
+      payload = JSON.parse(data)
+    } catch {
+      continue
+    }
+    const chunk = payload as OpenAIChatChunk
+    if (chunk.error?.message) {
+      throw new ApiError('stream', chunk.error.message)
+    }
+    const choice = chunk.choices?.[0]
+    if (!choice) {
+      continue
+    }
+    if (!started) {
+      started = true
+      yield {
+        type: 'message_start',
+        message: { id: chunk.id ?? '', model: chunk.model ?? body.model },
+      }
+    }
+    const delta = choice.delta ?? {}
+    if (delta.reasoning_content) {
+      if (!thinkingOpen) {
+        thinkingOpen = true
+        thinkingIndex = textOpen ? 1 : 0
+        yield {
+          type: 'content_block_start',
+          index: thinkingIndex,
+          content_block: { type: 'thinking', thinking: '', signature: '' },
+        }
+      }
+      yield {
+        type: 'content_block_delta',
+        index: thinkingIndex,
+        delta: { type: 'thinking_delta', thinking: delta.reasoning_content },
+      }
+    }
+    if (delta.content) {
+      if (!textOpen) {
+        textOpen = true
+        textIndex = thinkingOpen ? 1 : 0
+        yield {
+          type: 'content_block_start',
+          index: textIndex,
+          content_block: { type: 'text', text: '' },
+        }
+      }
+      yield {
+        type: 'content_block_delta',
+        index: textIndex,
+        delta: { type: 'text_delta', text: delta.content },
+      }
+    }
+    if (choice.finish_reason) {
+      stopReason = choice.finish_reason === 'length' ? 'max_tokens' : 'end_turn'
+    }
+  }
+
+  if (thinkingOpen) {
+    yield { type: 'content_block_stop', index: thinkingIndex }
+  }
+  if (textOpen) {
+    yield { type: 'content_block_stop', index: textIndex }
+  }
+  yield { type: 'message_delta', delta: { stop_reason: stopReason, stop_sequence: null } }
+  yield { type: 'message_stop' }
 }

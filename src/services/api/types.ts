@@ -4,7 +4,8 @@
  * 声明 deepseek_web_search / deepseek_read_url 或设置 safety_check.level 为 high 时进入扩展模式。
  */
 
-export type ChatModel = 'deepseek-flash' | 'deepseek-v4-pro'
+/** 模型 id：支持 DeepSeek 官方模型与任意第三方模型（见 services/api/models.ts 清单） */
+export type ChatModel = string
 
 // ---------- 响应：内容块 ----------
 
@@ -257,4 +258,29 @@ export type ApiErrorBody = {
     param?: string | null
     code?: string | null
   }
+}
+
+// ---------- OpenAI 兼容接口（/v1/chat/completions）----------
+
+/** 第三方模型与 deepseek-chat / deepseek-reasoner 走 OpenAI 兼容协议，仅文本对话 */
+export type OpenAIChatMessage = {
+  role: 'system' | 'user' | 'assistant'
+  content: string
+}
+
+export type OpenAIChatChunk = {
+  id?: string
+  object?: string
+  model?: string
+  choices?: {
+    index: number
+    delta?: {
+      role?: string
+      content?: string
+      /** deepseek-reasoner 等推理模型的思考内容 */
+      reasoning_content?: string
+    }
+    finish_reason?: string | null
+  }[]
+  error?: { message: string }
 }

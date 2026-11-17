@@ -345,3 +345,35 @@ export const toRequestMessages = (
 /** 思考用时（秒），至少 1 秒 */
 export const getThinkingSeconds = (startedAt: number, endedAt: number) =>
   Math.max(1, Math.round((endedAt - startedAt) / 1000))
+
+/**
+ * OpenAI 兼容协议的消息转换：只保留文本，忽略文件、思考与服务端工具。
+ * 历史轮次仅保留「提问 + 有回答」的成对消息；续写时把前缀正文作为末尾 assistant 消息回传。
+ */
+export const toOpenAIMessages = (
+  history: Message[],
+  question: UserMessage,
+  prefix?: AssistantMessage
+): { role: 'user' | 'assistant'; content: string }[] => {
+  const messages: { role: 'user' | 'assistant'; content: string }[] = []
+  for (const [user, reply] of getContextRounds(history)) {
+    if (!user.content) {
+      continue
+    }
+    messages.push({ role: 'user', content: user.content })
+    const text = getReplyText(reply)
+    if (text) {
+      messages.push({ role: 'assistant', content: text })
+    }
+  }
+  if (question.content) {
+    messages.push({ role: 'user', content: question.content })
+  }
+  if (prefix?.prefix) {
+    const text = getReplyText(prefix)
+    if (text.trim()) {
+      messages.push({ role: 'assistant', content: text })
+    }
+  }
+  return messages
+}

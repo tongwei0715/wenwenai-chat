@@ -185,6 +185,8 @@ export const en = {
   settingsLocaleZhCN: 'Simplified Chinese',
   settingsLocaleEnUS: 'English',
   settingsModel: 'Model',
+  modelGroupDeepseek: 'DeepSeek',
+  modelGroupThirdParty: 'Third-party',
   settingsModelFlash: 'WenWen Flash (deepseek-flash)',
   settingsModelV4Pro: 'WenWen Deep (deepseek-v4-pro)',
   settingsApiOrigin: 'API Base',

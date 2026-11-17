@@ -176,6 +176,8 @@ export const zh = {
   settingsLocaleZhCN: '简体中文',
   settingsLocaleEnUS: 'English',
   settingsModel: '模型',
+  modelGroupDeepseek: 'DeepSeek',
+  modelGroupThirdParty: '第三方',
   settingsModelFlash: '问问快答（deepseek-flash）',
   settingsModelV4Pro: '问问深度（deepseek-v4-pro）',
   settingsApiOrigin: 'API 地址',
