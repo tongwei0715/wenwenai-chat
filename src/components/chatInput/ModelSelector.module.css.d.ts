@@ -3,8 +3,7 @@ declare const styles: {
   readonly "triggerOpen": string;
   readonly "triggerLabel": string;
   readonly "menu": string;
-  readonly "group": string;
-  readonly "groupLabel": string;
+  readonly "hint": string;
   readonly "option": string;
   readonly "optionActive": string;
   readonly "optionLabel": string;

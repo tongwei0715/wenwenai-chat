@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { createId } from '../../utils/id.js'
 import { ApiError, streamMessage, streamOpenAICompletions } from '../api/client.js'
 import type { ChatModel, CreateMessageRequest } from '../api/types.js'
-import { getModel } from '../api/models.js'
+import { isAnthropicModel } from '../api/models.js'
 import { extractFileIds, getFileErrorCode, isRetryableApiError } from '../api/errors.js'
 import { cancelUpload, describeUploadError, uploadAttachment, useUploads } from '../attachments.js'
 import { useSettings } from '../settings.js'
@@ -1026,7 +1026,7 @@ const streamOpenAIReply = async (sessionId: string, initial: AssistantMessage, r
  */
 const streamReply = async (sessionId: string, initial: AssistantMessage, request: Request) => {
   // 第三方模型与 deepseek-chat / deepseek-reasoner 走 OpenAI 兼容协议（无附件/联网扩展）
-  if (getModel(initial.model).protocol === 'openai') {
+  if (!isAnthropicModel(initial.model)) {
     return streamOpenAIReply(sessionId, initial, request)
   }
   const controller = new AbortController()

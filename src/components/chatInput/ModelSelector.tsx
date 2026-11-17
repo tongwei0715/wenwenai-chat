@@ -3,25 +3,24 @@ import { createPortal } from 'react-dom'
 import { useState } from 'react'
 import { useAnchoredPosition, useDismiss } from '../base/anchored.js'
 import { IconChevronDownOutline14 } from '../base/icons.js'
-import { MODELS, getModel, type ModelGroup } from '../../services/api/models.js'
+import { useModelList } from '../../services/api/models.js'
 import { setModel, useSettings } from '../../services/settings.js'
+import { openSettings } from '../settings/settingsDialogState.js'
 import { useTranslate } from '../../i18n/index.js'
 import styles from './ModelSelector.module.css'
 
-const GROUPS: { key: ModelGroup; order: number }[] = [
-  { key: 'deepseek', order: 0 },
-  { key: 'third-party', order: 1 },
-]
-
-/** 输入框里的模型选择器：显示当前模型，点击展开分组下拉，供用户选择 DeepSeek 与第三方模型 */
+/**
+ * 输入框里的模型选择器：显示当前模型，点击展开下拉。
+ * 模型列表来自填入 API Key 后自动拉取（GET /models），不预填模型名称。
+ */
 export const ModelSelector = () => {
   const t = useTranslate()
   const model = useSettings((state) => state.model)
-  const current = getModel(model)
+  const { models, status } = useModelList()
   const [open, setOpen] = useState(false)
   const { anchorRef, floatingRef, position } = useAnchoredPosition<HTMLButtonElement, HTMLDivElement>(
     open,
-    { align: 'start', offset: 6, maxHeight: 360, minSpace: 200 }
+    { align: 'start', offset: 6, maxHeight: 320, minSpace: 200 }
   )
   useDismiss(open, [anchorRef, floatingRef], () => setOpen(false))
 
@@ -36,43 +35,50 @@ export const ModelSelector = () => {
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
-        <span className={styles.triggerLabel}>{current.label}</span>
+        <span className={styles.triggerLabel}>{model}</span>
         <IconChevronDownOutline14 />
       </button>
       {open
         ? createPortal(
             <div ref={floatingRef} className={styles.menu} style={position ?? undefined} role="menu">
-              {GROUPS.map(({ key, order }) => {
-                const items = MODELS.filter((item) => item.group === key)
-                if (items.length === 0) {
-                  return null
-                }
-                return (
-                  <div key={key} className={styles.group}>
-                    <div className={styles.groupLabel}>{t(order === 0 ? 'modelGroupDeepseek' : 'modelGroupThirdParty')}</div>
-                    {items.map((item) => (
-                      <button
-                        key={item.id}
-                        type="button"
-                        role="menuitemradio"
-                        aria-checked={item.id === model}
-                        className={clsx(styles.option, item.id === model && styles.optionActive)}
-                        onClick={() => {
-                          setOpen(false)
-                          setModel(item.id)
-                        }}
-                      >
-                        <span className={styles.optionLabel}>{item.label}</span>
-                        {item.id === model ? (
-                          <span className={styles.optionCheck} aria-hidden>
-                            ✓
-                          </span>
-                        ) : null}
-                      </button>
-                    ))}
-                  </div>
-                )
-              })}
+              {status === 'loading' ? (
+                <div className={styles.hint}>{t('modelListLoading')}</div>
+              ) : models.length === 0 ? (
+                <>
+                  <div className={styles.hint}>{t('modelListEmpty')}</div>
+                  <button
+                    type="button"
+                    className={styles.option}
+                    onClick={() => {
+                      setOpen(false)
+                      openSettings('data')
+                    }}
+                  >
+                    <span className={styles.optionLabel}>{t('modelListGoSettings')}</span>
+                  </button>
+                </>
+              ) : (
+                models.map((id) => (
+                  <button
+                    key={id}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={id === model}
+                    className={clsx(styles.option, id === model && styles.optionActive)}
+                    onClick={() => {
+                      setOpen(false)
+                      setModel(id)
+                    }}
+                  >
+                    <span className={styles.optionLabel}>{id}</span>
+                    {id === model ? (
+                      <span className={styles.optionCheck} aria-hidden>
+                        ✓
+                      </span>
+                    ) : null}
+                  </button>
+                ))
+              )}
             </div>,
             document.body
           )

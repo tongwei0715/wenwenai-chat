@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslate } from '../i18n/index.js'
 import { useSettings } from '../services/settings.js'
+import { refreshModelList } from '../services/api/client.js'
 import { useIsMobile, useMobileViewport, usePreventPageScroll } from './viewport.js'
 import {
   bindChatPersistence,
@@ -71,6 +72,11 @@ export const App = () => {
     void initChat()
     // 首次打开先在设置里输入 API Key
     ensureApiKey()
+    // 已保存过 Key 时拉取可用模型回写到输入框模型选择器
+    const apiKey = useSettings.getState().apiKey
+    if (apiKey) {
+      void refreshModelList(apiKey)
+    }
   }, [])
 
   return (

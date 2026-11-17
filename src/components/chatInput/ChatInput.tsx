@@ -8,7 +8,7 @@ import {
   IconThinkOutline14,
 } from '../base/icons.js'
 import { setSearch, setThinking, useSettings } from '../../services/settings.js'
-import { getModel } from '../../services/api/models.js'
+import { isAnthropicModel } from '../../services/api/models.js'
 import { useIsMobile } from '../../app/viewport.js'
 import { sendMessage, stopReply, useChatStore } from '../../services/chat/store.js'
 import {
@@ -56,7 +56,7 @@ const Input = ({ sessionId }: { sessionId: string | null }) => {
   const isMobile = useIsMobile()
   const search = useSettings((state) => state.search)
   const model = useSettings((state) => state.model)
-  const modelDef = getModel(model)
+  const modelHasExtensions = isAnthropicModel(model)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const togglesRef = useRef<HTMLDivElement>(null)
@@ -207,7 +207,7 @@ const Input = ({ sessionId }: { sessionId: string | null }) => {
         {/* 模型选择器：DeepSeek 与第三方模型都在这里选 */}
         <ModelSelector />
         {/* 深度思考 / 智能搜索开关仅 DeepSeek 官方协议支持，tooltip 在按钮上方 */}
-        {modelDef.protocol === 'anthropic' ? (
+        {modelHasExtensions ? (
           <div ref={togglesRef} className={styles.toggles}>
             <Tooltip content={t('deactivatedThinkTooltip')}>
               <button

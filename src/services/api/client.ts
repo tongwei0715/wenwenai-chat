@@ -1,5 +1,6 @@
 import { translate, type TranslationMessage } from '../../i18n/index.js'
 import { useSettings } from '../settings.js'
+import { setModelList, setModelListStatus } from './models.js'
 import { readMessageEvent } from './parseEvent.js'
 import { readServerSentEvents } from './sse.js'
 import type {
@@ -104,6 +105,29 @@ export const verifyApiKey = async (apiKey: string, signal?: AbortSignal): Promis
     headers: { Authorization: `Bearer ${apiKey}` },
     signal,
   })
+}
+
+/** GET /models 拉取可用模型 id 列表（OpenAI / DeepSeek 均返回 data[].id） */
+export const fetchModels = async (apiKey: string, signal?: AbortSignal): Promise<string[]> => {
+  const response = await request(`${getApiOrigin()}/models`, {
+    method: 'GET',
+    headers: { Authorization: `Bearer ${apiKey}` },
+    signal,
+  })
+  const body = (await response.json()) as { data?: { id?: unknown }[] }
+  return (body.data ?? []).flatMap((item) =>
+    typeof item?.id === 'string' && item.id ? [item.id] : []
+  )
+}
+
+/** 拉取可用模型并回写到模型列表 store（填入 Key 后调用） */
+export const refreshModelList = async (apiKey: string) => {
+  setModelListStatus('loading')
+  try {
+    setModelList(await fetchModels(apiKey))
+  } catch {
+    setModelListStatus('error')
+  }
 }
 
 /**

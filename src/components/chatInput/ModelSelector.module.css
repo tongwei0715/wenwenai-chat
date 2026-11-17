@@ -59,25 +59,11 @@
   overflow-y: auto;
 }
 
-.group {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-
-  & + & {
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid var(--dsw-alias-border-l1);
-  }
-}
-
-.groupLabel {
-  padding: 4px 10px 6px;
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  color: var(--dsw-alias-label-caption);
+.hint {
+  padding: 8px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--dsw-alias-label-tertiary);
   user-select: none;
 }
 

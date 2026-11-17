@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ApiError, verifyApiKey } from '../../services/api/client.js'
+import { ApiError, refreshModelList, verifyApiKey } from '../../services/api/client.js'
 import { classifyApiError } from '../../services/api/errors.js'
 import { setApiKey } from '../../services/settings.js'
 import { useTranslate } from '../../i18n/index.js'
@@ -37,6 +37,8 @@ export const useApiKeyForm = (onSaved?: () => void) => {
     try {
       await verifyApiKey(apiKey)
       setApiKey(apiKey)
+      // 校验通过后拉取可用模型并回写，供输入框内模型选择器展示
+      void refreshModelList(apiKey)
       setValue('')
       onSaved?.()
     } catch (e) {
